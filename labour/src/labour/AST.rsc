@@ -6,7 +6,7 @@ import util::Maybe;
  * - Hint: make sure there is an almost one-to-one correspondence with the grammar in Syntax.rsc
  */
 
-data BoulderingWall(loc src=|unknown:///|)
+data BoulderingWall
   = boulderingWall(str name, list[Volume] volumes, list[BoulderingRoute] routes);
 
 data Volume 

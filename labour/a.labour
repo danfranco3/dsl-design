@@ -1,0 +1,39 @@
+bouldering_wall "wall1" {
+    volumes [
+        circle {
+            pos { x: 50, y: 200 },
+            depth: -10,
+            radius: 50,
+            holds [
+                hold "0202" {
+                    pos { x: 118, y: 168 },
+                    shape: "52",
+                    colours [ blue, white ],
+                    start_hold: 1
+                },
+            ]
+        },
+        rectangle {
+            pos { x: 0, y: 0 },
+            depth: 40,
+            width: 50,
+            height: 20.
+            holds [
+                hold "0002" {
+                    pos { x: 108, y: 50 },
+                    shape: "5",
+                    rotation: 98,
+                    colours [ blue, white ],
+                    end_hold
+                }
+            ]
+        }
+    ],
+    routes [
+        bouldering_route "Easy route" {
+            grade: "1A",
+            grid_base_point { x: 37, y: 13 },
+            holds ["0202", "0002"]
+        }
+    ]
+}
