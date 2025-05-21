@@ -10,71 +10,74 @@ module labour::Syntax
  * plugin works accordingly.
  */
 
+layout Whitespace = [\t-\n\r\ ]*;     
+
 start syntax BoulderingWall
-    = "bouldering_wall" Label "{" "volumes" "[" {Volume ","}+ "]" "," "routes" "[" {Route ","}+ "]" "}";
+    = boulder: "bouldering_wall" Label "{" "volumes" "[" {Volume ","}+ "]" "," "routes" "[" {Route ","}+ "]" "}";
 
 lexical Label
-    = [a-zA-Z0-9_]+;
+    = "\""[a-zA-Z0-9_]+ "\"";
 
 syntax Volume
-    = "circle" Circle
+    = vol: "circle" Circle
     | "rectangle" Rectangle
     | "polygon" Polygon ;
 
 syntax Circle 
-    = "{" {Props ","}+ "}";
+    = circ: "{" {Props ","}+ "}";
 
 syntax Rectangle
-    = "{" {Props ","}+ "}";
+    = rect: "{" {Props ","}+ "}";
 
 syntax Polygon
-    = "{" {Props ","}+ "}";
+    = pol: "{" {Props ","}+ "}";
 
 syntax Coord
-    = "x:" Int
+    = coord: "x:" Int
     | "y:" Int
     | "z:" Int;
 
 syntax Props
-    = "depth:" Int
+    = prop: "depth:" Int
     | "radius:" Int
     | "width:" Int
+    | "height:" Int
     | "faces:" "[" {Faces ","}+ "]"
     | "pos" "{" Coord "," Coord "}"
     | "holds" "[" {Hold ","}+ "]";
 
 syntax Faces
-    = "face" "{" Face "}";
+    = face: "face" "{" Face "}";
 
 syntax Face
     = "vertices" "[" {Vertices ","}+ "]"
     | "holds" "[" {Hold ","}+ "]";
 
 syntax Vertices
-    = "{" Coord "," Coord "," Coord "}";
+    = vertex: "{" Coord "," Coord "," Coord "}";
 
 lexical StartHoldValue = [1-2];
 
 syntax HoldProps
-    = "start_hold:" StartHoldValue
+    = holdprop: "start_hold:" StartHoldValue
     | "pos" "{" Coord "," Coord "}"
-    | "shape:" Int
+    | "shape:" "\"" Int "\""
     | "rotation:" Int
     | "colours" "[" {Colour ","}+ "]"
     | "end_hold";
 
 lexical Colour = "white" | "yellow" | "green" | "blue" | "red" | "purple" | "pink" | "black" | "orange";
 
-lexical HoldID = "\" "[0-9][0-9][0-9][0-9] "\"";
+lexical HoldID = "\"" [0-9][0-9][0-9][0-9] "\"";
 
 syntax Hold
-    = HoldID "{" HoldProps "}";
+    = hold: "hold" HoldID "{" {HoldProps ","}+ "}";
 
 syntax Route
- = "bouldering_route" String "{" {RouteProps ","}+ "}";
+ = route: "bouldering_route" String "{" {RouteProps ","}+ "}";
 
 syntax RouteProps
-    = "grade:" String
+    = routeprop: "grade:" String
     | "grid_base_point" "{" Coord "," Coord "}"
     | "holds" "[" {HoldID ","}+ "]";
 

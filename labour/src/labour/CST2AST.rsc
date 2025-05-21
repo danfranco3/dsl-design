@@ -16,3 +16,12 @@ import labour::Syntax;
  * Map regular CST arguments (e.g., *, +, ?) to lists
  * Map lexical nodes to Rascal primitive types (bool, int, str)
  */
+
+BoulderingWall cst2ast(start[BoulderingWall] b){
+    return load(b.top);
+}
+
+BoulderingWall load(BoulderingWall b) = visit(b) {
+  case `boulderingwall <str name> { <Volume+ volumes> <BoulderingRoute+ routes> }` =>
+    boulderingWall(name, [loadVolume(v) | v <- volumes], [loadRoute(r) | r <- routes]);
+};
