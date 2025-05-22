@@ -7,7 +7,7 @@ import util::Maybe;
  */
 
 data BoulderingWall
-  = boulderingWall(str name, list[Volume] volumes, list[BoulderingRoute] routes);
+  = boulderingWall(str name, list[Volume] volumes, list[Route] routes);
 
 data Volume 
   = circle(Pos pos, int depth, int radius)
@@ -30,5 +30,5 @@ data HoldType
 data Hold 
   = hold(str id, Pos pos, str shape, list[str] colours, Maybe[HoldType] holdType, Maybe[int] rotation);
 
-data BoulderingRoute 
-  = boulderingRoute(str grade, Pos grid_base_point, str id, list[str] holds);
+data Route 
+  = route(str grade, Pos grid_base_point, str id, list[str] holds);
