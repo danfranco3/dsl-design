@@ -15,8 +15,10 @@ layout Whitespace = [\t-\n\r\ ]*;
 start syntax BoulderingWall
     = boulder: "bouldering_wall" Label "{" "volumes" "[" {Volume ","}+ "]" "," "routes" "[" {Route ","}+ "]" "}";
 
-lexical Label
+lexical LabelLex
     = "\""[a-zA-Z0-9_]+ "\"";
+
+syntax Label = name: LabelLex;
 
 syntax Volume
     = vol: "circle" Circle
@@ -44,7 +46,12 @@ syntax Props
     | "height:" Int
     | "faces:" "[" {Faces ","}+ "]"
     | "pos" "{" Coord "," Coord "}"
-    | "holds" "[" {Hold ","}+ "]";
+    | "holds" "[" {Hold ","}+ "]"
+    | "start_hold:" StartHoldValue
+    | "shape:" "\"" Int "\""
+    | "rotation:" Int
+    | "colours" "[" {Colour ","}+ "]"
+    | "end_hold";
 
 syntax Faces
     = face: "face" "{" Face "}";
@@ -58,20 +65,12 @@ syntax Vertices
 
 lexical StartHoldValue = [1-2];
 
-syntax HoldProps
-    = holdprop: "start_hold:" StartHoldValue
-    | "pos" "{" Coord "," Coord "}"
-    | "shape:" "\"" Int "\""
-    | "rotation:" Int
-    | "colours" "[" {Colour ","}+ "]"
-    | "end_hold";
-
 lexical Colour = "white" | "yellow" | "green" | "blue" | "red" | "purple" | "pink" | "black" | "orange";
 
 lexical HoldID = "\"" [0-9][0-9][0-9][0-9] "\"";
 
 syntax Hold
-    = hold: "hold" HoldID "{" {HoldProps ","}+ "}";
+    = hold: "hold" HoldID "{" {Props ","}+ "}";
 
 syntax Route
  = route: "bouldering_route" String "{" {RouteProps ","}+ "}";

@@ -6,29 +6,44 @@ import util::Maybe;
  * - Hint: make sure there is an almost one-to-one correspondence with the grammar in Syntax.rsc
  */
 
-data BoulderingWall
-  = boulderingWall(str name, list[Volume] volumes, list[Route] routes);
+data BoulderingWallAST
+  = boulderingWall(str name, list[VolumeAST] volumes, list[RouteAST] routes);
 
-data Volume 
-  = circle(Pos pos, int depth, int radius)
-  | rectangle(Pos pos, int depth, int width, int height, list[Hold] holds)
-  | polygon(Pos pos, list[Face] faces);
+data VolumeAST
+  = circle(list[PropsAST] props)
+  | rectangle(list[PropsAST] props)
+  | polygon(list[PropsAST] props);
 
-data Pos
-  = pos(int x, int y);
+data PropsAST
+  = height(int h)
+  | depth(int d)
+  | radius(int r)
+  | faces(list[FaceAST] fs)
+  | pos(CoordinateAST x, CoordinateAST y)
+  | holds(list[HoldAST] hs)
+  | start_hold(int number)
+  | shape(str s)
+  | rotation(int rot)
+  | colours(list[str] cs);
 
-data Face
-  = face(list[Vertex] vertices, list[Hold] holds);
+data CoordinateAST
+  = x(int c)
+  | y(int c)
+  | z(int c);
 
-data Vertex
-  = vertex(int x, int y, int z);
+data FaceAST
+  = face(list[VertexAST] vertices, list[HoldAST] holds);
 
-data HoldType 
-  = startHold(int startNum) 
-  | endHold();
+data VertexAST
+  = vertex(CoordinateAST x, CoordinateAST y, CoordinateAST z);
 
-data Hold 
-  = hold(str id, Pos pos, str shape, list[str] colours, Maybe[HoldType] holdType, Maybe[int] rotation);
+data HoldAST 
+  = hold(str holdId, list[PropsAST] props);
 
-data Route 
-  = route(str grade, Pos grid_base_point, str id, list[str] holds);
+data RouteAST 
+  = route(str id, list[RoutePropsAST] props);
+
+data RoutePropsAST
+  = grade(str g)
+  | grid_base_point(CoordinateAST x, CoordinateAST y)
+  | holds(list[str] holdIds);
