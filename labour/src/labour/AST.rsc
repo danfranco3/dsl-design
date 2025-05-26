@@ -18,21 +18,27 @@ data PropsAST
   = height(int h)
   | depth(int d)
   | radius(int r)
+  | width(int w)
   | faces(list[FaceAST] fs)
   | pos(CoordinateAST x, CoordinateAST y)
   | holds(list[HoldAST] hs)
   | start_hold(int number)
   | shape(str s)
   | rotation(int rot)
-  | colours(list[str] cs);
+  | colours(list[str] cs)
+  | end_hold();
 
 data CoordinateAST
   = x(int c)
   | y(int c)
   | z(int c);
 
+data FacePropsAST
+  = vertices(list[VertexAST] vs)
+  | face_holds(list[HoldAST] hs);
+
 data FaceAST
-  = face(list[VertexAST] vertices, list[HoldAST] holds);
+  = face(list[FacePropsAST]);
 
 data VertexAST
   = vertex(CoordinateAST x, CoordinateAST y, CoordinateAST z);

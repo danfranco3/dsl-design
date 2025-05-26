@@ -19,226 +19,152 @@ import util::Maybe;
  * Map lexical nodes to Rascal primitive types (bool, int, str)
  */
 
-BoulderingWall cst2ast(start[BoulderingWall] b){
+BoulderingWallAST cst2ast(start[BoulderingWall] b){
     return load(b.top);
 }
 
-BoulderingWall load((BoulderingWall)`boulderingWall <Label name> {<{Volume ","}+ vol>} {<{Route ","}+ route>}`) {
-	return boulderingWall("<name>", [loadVolume(v) | v <- vol],  [loadRoute(r) | r <- route]);
-}
+BoulderingWallAST load((BoulderingWall) `bouldering_wall <Label label> { volumes [ <{Volume ","}+ vols> ], routes [ <{Route ","}+ routes> ] }`)
+	= boulderingWall(unquoteString("<label>"), [loadVolume(v) | v <- vols],  [loadRoute(r) | r <- routes]);
 
-Volume loadVolume(Volume v) {
+BoulderingWallAST load(BoulderingWall b){
+	println("<b>");
+	throw "Unknown bouldering_wall definition";
+}
+ 
+VolumeAST loadVolume(Volume v) {
 	switch (v) {
 		case (Volume) `circle { <{Props ","}+ props> }`:{
-      list[Props] propsList = [p | p <- props];
-			return circle(
-				extractPos(propsList),
-				extractIntProp("depth", propsList),
-				extractIntProp("radius", propsList)
-			);
-    }
+			return circle([loadProp(p) | p <- props]);
+    	}	
 
 		case (Volume) `rectangle { <{Props ","}+ props> }`:{
-      list[Props] propsList = [p | p <- props];
-			return rectangle(
-				extractPos(propsList),
-				extractIntProp("depth", propsList),
-				extractIntProp("width", propsList),
-				extractIntProp("height", propsList),
-				extractHoldList(propsList)
-			);
-    }
+			return circle([loadProp(p) | p <- props]);
+		}
 
 		case (Volume) `polygon { <{Props ","}+ props> }`:{
-      list[Props] propsList = [p | p <- props];
-			return polygon(
-				extractPos(propsList),
-				extractFaceList(propsList)
-			);
-    }
+			return circle([loadProp(p) | p <- props]);
+    	}	
 
 		default: throw "Unknown volume type";
 	}
 }
 
-int extractIntProp(str label, list[Props] props) {
-    for (p <- props) {
-        switch (p) {
-            case (Props) `depth: <Int i>`: 
-                if (label == "depth") return toInt("<i>");
-            case (Props) `radius: <Int i>`:
-                if (label == "radius") return toInt("<i>");
-            case (Props) `width: <Int i>`:
-                if (label == "width") return toInt("<i>");
-            case (Props) `height: <Int i>`:
-                if (label == "height") return toInt("<i>");
-        }
-    }
-    throw "Missing property <label>";
-}
-
-
-Pos extractPos(list[Props] props) {
-	for (p <- props) {
-		switch (p) {
-			case (Props) `pos { x: <Int x>, y: <Int y> }`:
-				return pos(toInt("<x>"), toInt("<y>"));
+PropsAST loadProp(Props p){
+	switch (p) {
+		case (Props) `height: <Int h1>` : {
+			return height(toInt("<h1>"));
 		}
-	}
-	throw "Missing pos";
-}
-
-list[Hold] extractHoldList(list[Props] props) {
-	for (p <- props) {
-		switch (p) {
-			case (Props) `holds [ <{Hold ","}+ holds> ]`:
-				return [loadHold(h) | h <- holds];
+		case (Props) `depth: <Int d1>` : {
+			return depth(toInt("<d1>"));
 		}
-	}
-	return []; // optional
-}
-
-list[Face] extractFaceList(list[Props] props) {
-	for (p <- props) {
-		switch (p) {
-			case (Props) `faces: [ <{Faces ","}+ faces> ]`:
-				return [loadFace(f) | f <- faces];
+		case (Props) `width: <Int w1>` : {
+			return depth(toInt("<w1>"));
 		}
+		case (Props) `radius: <Int r1>` : {
+			return radius(toInt("<r1>"));
+		}
+		case (Props) `rotation: <Int r2>` : {
+			return rotation(toInt("<r2>"));
+		}
+		case (Props) `pos { <Coord c1>, <Coord c2> }` : {
+			return pos(loadCoordinate(c1), loadCoordinate(c2));
+		}
+		case (Props) `holds [ <{Hold ","}+ hs> ]` : {
+			return holds([loadHold(h) | h <- hs]);
+		}
+		case (Props) `start_hold: <StartHoldValue s>` : {
+			return start_hold(toInt("<s>"));
+		}
+		case (Props) `shape: <ShapeProp sp>` : {
+			return shape(unquoteString("<sp>"));
+		} 
+		case (Props) `colours [ <{Colour ","}+ cs> ]` : {
+			return colours(["<c>" | c <- cs]);
+		}
+		case (Props) `faces: [ <{Face ","}+ fs> ]` : {
+			return faces([loadFace(f) | f <- fs]);
+		}
+		case (Props) `end_hold` : {
+			return end_hold();
+		}
+		default : throw "Unknown prop type";
 	}
-	return [];
 }
 
-Hold loadHold(Hold h) {
-	switch (h) {
-		case (Hold) `hold <HoldID id> { <{HoldProps ","}+ props> }`:{
-      list[HoldProps] propsList = [p | p <- props];
-			return hold(
-				unquote(id),
-				extractHoldPos(propsList),
-				extractHoldShape(propsList),
-				extractHoldColours(propsList),
-        nothing(), // holdtype???
-				extractHoldRotation(propsList)
-			);
-    }
-	}
-	throw "Invalid hold";
-}
-
-Face loadFace(Faces f) {
+FaceAST loadFace(Face f) {
 	switch (f) {
-		case (Faces) `face { <Face inner> }`:
-			switch (inner) {
-				case (Face) `vertices [ <{Vertices ","}+ verts> ]`:
-					return face([loadVertex(v) | v <- verts], []);
-				case (Face) `holds [ <{Hold ","}+ holds> ]`:
-					return face([], [loadHold(h) | h <- holds]);
-			}
-	}
-	throw "Invalid face";
-}
-
-Vertex loadVertex(Vertices v) {
-	switch (v) {
-		case (Vertices) `{ x: <Int x>, y: <Int y>, z: <Int z> }`:
-			return vertex(toInt("<x>"), toInt("<y>"), toInt("<z>"));
-	}
-	throw "Invalid vertex";
-}
-
-Pos extractHoldPos(list[HoldProps] props) {
-	for (p <- props) {
-		switch (p) {
-			case (HoldProps) `pos { x: <Int x>, y: <Int y> }`:
-				return pos(toInt("<x>"), toInt("<y>"));
+		case (Face) `face { <FaceProps fp> }` : {
+			return face([loadFaceProps(fp)]);
 		}
+		default : throw "Incorrect face definition";
 	}
-	throw "Missing hold position";
 }
 
-str extractHoldShape(list[HoldProps] props) {
-	for (p <- props) {
-		switch (p) {
-			case (HoldProps) `shape: "<Int s>"`:
-				return "<s>";
+FacePropsAST loadFaceProps(FaceProps fp){
+	switch (fp) {
+		case (FaceProps) `vertices [ <{Vertices ","}+ vs> ]` : {
+			return vertices([loadVertices(v) | v <- vs]);
 		}
-	}
-	throw "Missing hold shape";
-}
-
-list[str] extractHoldColours(list[HoldProps] props) {
-	for (p <- props) {
-		switch (p) {
-			case (HoldProps) `colours: [ <{Colour ","}* colours> ]`:
-				return ["<c>" | c <- colours];
+		case (FaceProps) `holds [ <{Hold ","}+ hs> ]` : {
+			return face_holds([loadHold(h) | h <- hs]);
 		}
+		default : throw "Unknown face props";
 	}
-	return [];
 }
 
+VertexAST loadVertices((Vertices) `{ <Coord c1> , <Coord c2> , <Coord c3> }`)
+	= vertex(loadCoordinate(c1), loadCoordinate(c2), loadCoordinate(c3));
 
-Maybe[int] extractHoldRotation(list[HoldProps] props) {
-    for (p <- props) {
-        switch (p) {
-            case (HoldProps) `rotation: <Int r>`:
-                return just(toInt("<r>"));
-        }
-    }
-    return nothing();  
+VertexAST loadVertices(Vertices vs){
+	println("<vs>");
+	throw "Unknown vertices definition";
 }
 
-str unquote(HoldID s) {
-    str stringValue = toString(s); // Convert HoldId to str
-    if ((size(stringValue) >= 2) && (stringValue[0] == "\"") && (stringValue[size(stringValue) - 1] == "\"")) {
-        return substring(stringValue, 1, size(stringValue) - 1);
-    }
-    return stringValue;
+HoldAST loadHold((Hold) `hold <HoldID id> { <{Props ","}+ ps> }`)
+	= hold(unquoteString("<id>"), [loadProp(p) | p <- ps]);
+
+HoldAST loadHold(Hold h){
+	println("<h>");
+	throw "Unknown hold definition";
 }
 
-Route loadRoute(Route r) {
-    switch (r) {
-        case (Route) `bouldering_route <String name> { <{RouteProps ","}+ props> }`: {
-            str routeName = unquoteString(toString(name));
-            list[RouteProps] propsList = [p | p <- props];
-
-            str grade = extractRouteGrade(propsList);
-            Pos gridBase = extractGridBasePoint(propsList);
-            list[str] holds = extractRouteHolds(propsList);
-
-            return route(grade, gridBase, routeName, holds);
-        }
-    }
-    throw "Invalid route";
+CoordinateAST loadCoordinate(Coord c) {
+	switch (c) {
+		case (Coord) `x: <Int i>` : {
+			return x(toInt("<i>"));
+		}
+		case (Coord) `y: <Int i>` : {
+			return y(toInt("<i>"));
+		}
+		case (Coord) `z: <Int i>` : {
+			return z(toInt("<i>"));
+		}
+		default: throw "Unknown coordinate type";
+	}
 }
 
-str extractRouteGrade(list[RouteProps] props) {
-    for (p <- props) {
-        switch (p) {
-            case (RouteProps) `grade: <String g>`:
-                return unquoteString(toString(g));
-        }
-    }
-    throw "Missing route grade";
+RouteAST loadRoute((Route) `bouldering_route <String s> { <{RouteProps ","}+ rps> }`) {
+	return route(unquoteString("<s>"), [loadRouteProp(rp) | rp <- rps]);
 }
 
-Pos extractGridBasePoint(list[RouteProps] props) {
-    for (p <- props) {
-        switch (p) {
-            case (RouteProps) `grid_base_point { x: <Int x>, y: <Int y> }`:
-                return pos(toInt("<x>"), toInt("<y>"));
-        }
-    }
-    throw "Missing grid base point";
+RouteAST loadRoute(Route r) {
+	println(r[0]);
+	throw "Unknown route definition";
 }
 
-list[str] extractRouteHolds(list[RouteProps] props) {
-    for (p <- props) {
-        switch (p) {
-            case (RouteProps) `holds [ <{HoldID ","}+ holds> ]`:
-                return [unquoteString(toString(h)) | h <- holds];
-        }
-    }
-    return []; 
+RoutePropsAST loadRouteProp(RouteProps rp) {
+	switch (rp) {
+		case (RouteProps) `grade: <String g>` : {
+			return grade(unquoteString("<g>"));
+		}
+		case (RouteProps) `grid_base_point { <Coord c1> , <Coord c2> }` : {
+			return grid_base_point(loadCoordinate(c1), loadCoordinate(c2));
+		}
+		case (RouteProps) `holds [ <{HoldID ","}+ hs> ]` : {
+			return holds([unquoteString("<h>") | h <- hs]);
+		}
+		default : throw "Unknown route prop";
+	}
 }
 
 str unquoteString(str s) {

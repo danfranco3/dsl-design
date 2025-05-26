@@ -13,12 +13,10 @@ module labour::Syntax
 layout Whitespace = [\t-\n\r\ ]*;     
 
 start syntax BoulderingWall
-    = boulder: "bouldering_wall" Label "{" "volumes" "[" {Volume ","}+ "]" "," "routes" "[" {Route ","}+ "]" "}";
+    = boulder: "bouldering_wall" Label name "{" "volumes" "[" {Volume ","}+ "]" "," "routes" "[" {Route ","}+ "]" "}";
 
-lexical LabelLex
+lexical Label
     = "\""[a-zA-Z0-9_]+ "\"";
-
-syntax Label = name: LabelLex;
 
 syntax Volume
     = vol: "circle" Circle
@@ -39,24 +37,27 @@ syntax Coord
     | "y:" Int
     | "z:" Int;
 
+
+lexical ShapeProp = "\"" Int "\"";
+
 syntax Props
     = prop: "depth:" Int
     | "radius:" Int
     | "width:" Int
     | "height:" Int
-    | "faces:" "[" {Faces ","}+ "]"
+    | "faces:" "[" {Face ","}+ "]"
     | "pos" "{" Coord "," Coord "}"
     | "holds" "[" {Hold ","}+ "]"
     | "start_hold:" StartHoldValue
-    | "shape:" "\"" Int "\""
+    | "shape:" ShapeProp
     | "rotation:" Int
     | "colours" "[" {Colour ","}+ "]"
     | "end_hold";
 
-syntax Faces
-    = face: "face" "{" Face "}";
-
 syntax Face
+    = "face" "{" {FaceProps ","}+ "}";
+
+syntax FaceProps
     = "vertices" "[" {Vertices ","}+ "]"
     | "holds" "[" {Hold ","}+ "]";
 
@@ -73,12 +74,12 @@ syntax Hold
     = hold: "hold" HoldID "{" {Props ","}+ "}";
 
 syntax Route
- = route: "bouldering_route" String "{" {RouteProps ","}+ "}";
+ = route: "bouldering_route" String id "{" {RouteProps ","}+ "}";
 
 syntax RouteProps
-    = routeprop: "grade:" String
+    = "grade:" String g
     | "grid_base_point" "{" Coord "," Coord "}"
     | "holds" "[" {HoldID ","}+ "]";
 
 lexical Int = [\-]? [0-9]+;
-lexical String = "\"" ![\"]* "\"";
+lexical String = "\"" ![\"]+ "\"";
