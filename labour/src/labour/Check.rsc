@@ -23,14 +23,38 @@ import String;
  * Some examples are provided below.
  */
 
-bool checkBoulderWallConfiguration(BoulderingWallAST wall){
+bool checkBoulderWallConfiguration(BoulderingWallAST wall) {
   bool numberOfHolds = checkNumberOfHolds(wall);
-
-  bool startingLabelLimit = checkStartingHoldsTotalLimit(wall);
+  bool startingLabelLimit = checkHandStartHoldsRoute(wall);
   bool unique_end_hold = checkUniqueEndHold(wall);
+  bool oneVolumeOneRoute = checkOneVolumeOneRoute(wall);
+  bool holdsRoute = checkHoldsRoute(wall);
+  bool gradeGridIdentifier = checkGradeGridIdentifier(wall);
+  bool xyComponent = checkXYComponent(wall);
+  bool endHoldsRoute = checkEndHoldsRoute(wall);
+  bool sameColour = checkSameColour(wall);
+  bool completeHold = checkCompleteHold(wall);
+  bool rotationValid = checkRotation(wall);
+  bool correctCircle = checkCorrectCircle(wall);
+  bool correctRectangle = checkCorrectRectangle(wall); 
+  bool correctPolygon = checkCorrectPolygon(wall);
 
-  return (numberOfHolds && startingLabelLimit && unique_end_hold);
+  return numberOfHolds &&
+         startingLabelLimit &&
+         unique_end_hold &&
+         oneVolumeOneRoute &&
+         holdsRoute &&
+         gradeGridIdentifier &&
+         xyComponent &&
+         endHoldsRoute &&
+         sameColour &&
+         completeHold &&
+         rotationValid &&
+         correctCircle &&
+         correctRectangle &&
+         correctPolygon;
 }
+
 
 
 // Check that there are at least two holds in the wall
@@ -325,7 +349,7 @@ bool checkCorrectCircle(BoulderingWallAST wall) {
 }
 
 // A rectangular volume must have a depth, a position, a width and a height
-bool checkCorrectCircle(BoulderingWallAST wall) {
+bool checkCorrectRectangle(BoulderingWallAST wall) {
   bool all_valid = true;
 
   visit(wall) {
