@@ -45,7 +45,7 @@ syntax Props
     | "radius:" Int
     | "width:" Int
     | "height:" Int
-    | "faces:" "[" {Face ","}+ "]"
+    | "faces" "[" {Face ","}+ "]"
     | "pos" "{" Coord "," Coord "}"
     | "holds" "[" {Hold ","}+ "]"
     | "start_hold:" StartHoldValue

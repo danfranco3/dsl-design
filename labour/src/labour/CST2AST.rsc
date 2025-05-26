@@ -13,10 +13,8 @@ import util::Maybe;
 
 
 /*
- * Implement a mapping from concrete syntax trees (CSTs) to abstract syntax trees (ASTs)
- * Hint: Use switch to do case distinction with concrete patterns
- * Map regular CST arguments (e.g., *, +, ?) to lists
- * Map lexical nodes to Rascal primitive types (bool, int, str)
+ * Implementation of a mapping from concrete syntax trees (CSTs) to abstract syntax trees (ASTs)
+ * We also try to handle a few errors to help the programmer.
  */
 
 BoulderingWallAST cst2ast(start[BoulderingWall] b){
@@ -38,11 +36,11 @@ VolumeAST loadVolume(Volume v) {
     	}	
 
 		case (Volume) `rectangle { <{Props ","}+ props> }`:{
-			return circle([loadProp(p) | p <- props]);
+			return rectangle([loadProp(p) | p <- props]);
 		}
 
 		case (Volume) `polygon { <{Props ","}+ props> }`:{
-			return circle([loadProp(p) | p <- props]);
+			return polygon([loadProp(p) | p <- props]);
     	}	
 
 		default: throw "Unknown volume type";
@@ -58,7 +56,7 @@ PropsAST loadProp(Props p){
 			return depth(toInt("<d1>"));
 		}
 		case (Props) `width: <Int w1>` : {
-			return depth(toInt("<w1>"));
+			return width(toInt("<w1>"));
 		}
 		case (Props) `radius: <Int r1>` : {
 			return radius(toInt("<r1>"));
@@ -81,7 +79,7 @@ PropsAST loadProp(Props p){
 		case (Props) `colours [ <{Colour ","}+ cs> ]` : {
 			return colours(["<c>" | c <- cs]);
 		}
-		case (Props) `faces: [ <{Face ","}+ fs> ]` : {
+		case (Props) `faces [ <{Face ","}+ fs> ]` : {
 			return faces([loadFace(f) | f <- fs]);
 		}
 		case (Props) `end_hold` : {
@@ -93,8 +91,8 @@ PropsAST loadProp(Props p){
 
 FaceAST loadFace(Face f) {
 	switch (f) {
-		case (Face) `face { <FaceProps fp> }` : {
-			return face([loadFaceProps(fp)]);
+		case (Face) `face { <{FaceProps ","}+ fps> }` : {
+			return face([loadFaceProps(fp) | fp <- fps]);
 		}
 		default : throw "Incorrect face definition";
 	}

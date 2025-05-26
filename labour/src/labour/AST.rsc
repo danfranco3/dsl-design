@@ -2,8 +2,11 @@ module labour::AST
 import util::Maybe;
 
 /*
- * Define the Abstract Syntax for LaBouR
- * - Hint: make sure there is an almost one-to-one correspondence with the grammar in Syntax.rsc
+ * Definition of the Abstract Syntax for LaBouR
+ * 
+ * Here we define the Abstract Syntax. We added an AST to the end of the non-terminals in order to differentiate between the CST and the AST.
+ * 
+ * The terminals have the same name as in the Syntax file.
  */
 
 data BoulderingWallAST

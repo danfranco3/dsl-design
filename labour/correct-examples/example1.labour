@@ -2,8 +2,8 @@ bouldering_wall "wall1" {
     volumes [
         circle {
             pos { x: 50, y: 200 },
+            radius: 5,
             depth: -10,
-            radius: 50,
             holds [
                 hold "0202" {
                     pos { x: 118, y: 168 },

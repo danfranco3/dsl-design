@@ -39,18 +39,18 @@ bool checkBoulderWallConfiguration(BoulderingWallAST wall) {
   bool correctRectangle = checkCorrectRectangle(wall); 
   bool correctPolygon = checkCorrectPolygon(wall);
 
-  return numberOfHolds &&
-         startingLabelLimit &&
-         unique_end_hold &&
-         oneVolumeOneRoute &&
-         holdsRoute &&
-         gradeGridIdentifier &&
-         xyComponent &&
-         endHoldsRoute &&
-         sameColour &&
-         completeHold &&
-         rotationValid &&
-         correctCircle &&
+  return numberOfHolds && // correct
+         startingLabelLimit && // correct
+         unique_end_hold && // correct
+         oneVolumeOneRoute && // correct
+         holdsRoute && // correct
+         gradeGridIdentifier && // correct
+         xyComponent && // correct
+         endHoldsRoute && // correct
+         sameColour && // correct
+         completeHold && // correct
+         rotationValid && // correct
+         correctCircle && 
          correctRectangle &&
          correctPolygon;
 }
@@ -271,6 +271,7 @@ bool checkCompleteHold(BoulderingWallAST wall) {
           }
           case shape(_): shape_flag = true;
           case colours(_): colour_flag = true;
+          default : throw "Property <prop> is not defined for Hold";
         }
       }
       if (!(pos_flag && x_flag && y_flag && shape_flag && colour_flag)) {
@@ -333,11 +334,14 @@ bool checkCorrectCircle(BoulderingWallAST wall) {
             pos_flag = true;
             switch (xCoord) {
               case x(_): x_flag = true;
+              case y(_): y_flag = true;
             }
             switch (yCoord) {
+              case x(_): x_flag = true;
               case y(_): y_flag = true;
             }
           }
+          default : throw "Property <prop> is not defined for volume Circle";
         }
       }
       if (!(radius_flag && depth_flag && pos_flag && x_flag && y_flag)) {
@@ -370,11 +374,14 @@ bool checkCorrectRectangle(BoulderingWallAST wall) {
             pos_flag = true;
             switch (xCoord) {
               case x(_): x_flag = true;
+              case y(_): y_flag = true;
             }
             switch (yCoord) {
+              case x(_): x_flag = true;
               case y(_): y_flag = true;
             }
           }
+          default : throw "Property <prop> is not defined for volume Rectangle";
         }
       }
       if (!(depth_flag && width_flag && height_flag && pos_flag && x_flag && y_flag)) {
@@ -400,9 +407,15 @@ bool checkCorrectPolygon(BoulderingWallAST wall){
             if (size(fs) >= 1) {
               hasFaces = true;
 
-              for (face(list[VertexAST] vertices, _ ) <- fs) {
-                if (size(vertices) != 3) {
-                  all_valid = false;
+              for (face(list[FacePropsAST] ps) <- fs) {
+                for (p <- ps){
+                  switch (p) {
+                    case vertices(vertex_list) : {
+                      if (size(vertex_list) != 3){
+                        all_valid = false;
+                      }
+                    }
+                  }
                 }
               }
 
