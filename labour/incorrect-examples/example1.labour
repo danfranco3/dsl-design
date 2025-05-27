@@ -1,0 +1,43 @@
+bouldering_wall "wall9" {
+    volumes [
+        rectangle {
+            pos { x: 0, y: 0 },
+            depth: 30,
+            width: 100,
+            height: 100,
+            holds [
+                hold "8001" {
+                    pos { x: 10, y: 10 },
+                    shape: "21",
+                    colours [ red ],
+                    start_hold: 1
+                },
+                hold "8002" {
+                    pos { x: 20, y: 20 },
+                    shape: "21",
+                    colours [ red ],
+                    start_hold: 2
+                },
+                hold "8003" {
+                    pos { x: 30, y: 30 },
+                    shape: "21",
+                    colours [ red ],
+                    start_hold: 1
+                },
+                hold "8004" {
+                    pos { x: 50, y: 70 },
+                    shape: "21",
+                    colours [ red ],
+                    end_hold
+                }
+            ]
+        }
+    ],
+    routes [
+        bouldering_route "Triple Start" {
+            grade: "6A",
+            grid_base_point { x: 0, y: 0 },
+            holds ["8001", "8002", "8003", "8004"]
+        }
+    ]
+}

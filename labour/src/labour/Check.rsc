@@ -25,46 +25,46 @@ import String;
 
 bool checkBoulderWallConfiguration(BoulderingWallAST wall) {
   bool numberOfHolds = checkNumberOfHolds(wall);
-  if (!numberOfHolds) print("Each route must have two or more holds.");
+  if (!numberOfHolds) println("Each route must have two or more holds.");
 
   bool startingLabelLimit = checkHandStartHoldsRoute(wall);
-  if (!startingLabelLimit) print("Each route must have between 0 and 2 hand start holds.");
+  if (!startingLabelLimit) println("Each route must have between 0 and 2 hand start holds.");
 
   bool unique_end_hold = checkUniqueEndHold(wall);
-  if (!unique_end_hold) print("Each route can have at most one end hold.");
+  if (!unique_end_hold) println("Each route can have at most one end hold.");
 
   bool oneVolumeOneRoute = checkOneVolumeOneRoute(wall);
-  if (!oneVolumeOneRoute) print("Every wall must have at least one volume and one route.");
+  if (!oneVolumeOneRoute) println("Every wall must have at least one volume and one route.");
 
   bool holdsRoute = checkHoldsRoute(wall);
-  if (!holdsRoute) print("Every route must have at least two holds defined.");
+  if (!holdsRoute) println("Every route must have at least two holds defined.");
 
   bool gradeGridIdentifier = checkGradeGridIdentifier(wall);
-  if (!gradeGridIdentifier) print("Every route must have a grade, a grid base point, and an identifier.");
+  if (!gradeGridIdentifier) println("Every route must have a grade, a grid base point, and an identifier.");
 
   bool xyComponent = checkXYComponent(wall);
-  if (!xyComponent) print("The grid base point must include both x and y components.");
+  if (!xyComponent) println("The grid base point must include both x and y components.");
 
   bool endHoldsRoute = checkEndHoldsRoute(wall);
-  if (!endHoldsRoute) print("Routes must not have more than one end hold or incorrectly defined end hold.");
+  if (!endHoldsRoute) println("Routes must not have more than one end hold or incorrectly defined end hold.");
 
   bool sameColour = checkSameColour(wall);
-  if (!sameColour) print("All holds in a route must have the same colour, or one matching the route colour if multi-coloured.");
+  if (!sameColour) println("All holds in a route must have the same colour, or one matching the route colour if multi-coloured.");
 
   bool completeHold = checkCompleteHold(wall);
-  if (!completeHold) print("Each hold must have a position (x and y), a shape, and at least one colour.");
+  if (!completeHold) println("Each hold must have a position (x and y), a shape, and at least one colour.");
 
   bool rotationValid = checkRotation(wall);
-  if (!rotationValid) print("Hold rotation must be between 0 and 359 if specified.");
+  if (!rotationValid) println("Hold rotation must be between 0 and 359 if specified.");
 
   bool correctCircle = checkCorrectCircle(wall);
-  if (!correctCircle) print("A circular volume must have a radius, depth, and position.");
+  if (!correctCircle) println("A circular volume must have a radius, depth, and position.");
 
   bool correctRectangle = checkCorrectRectangle(wall);
-  if (!correctRectangle) print("A rectangular volume must have a depth, position, width, and height.");
+  if (!correctRectangle) println("A rectangular volume must have a depth, position, width, and height.");
 
   bool correctPolygon = checkCorrectPolygon(wall);
-  if (!correctPolygon) print("A polygonal volume must have at least one face, and each face must have exactly three vertices.");
+  if (!correctPolygon) println("A polygonal volume must have at least one face, and each face must have exactly three vertices.");
 
   return numberOfHolds &&
          startingLabelLimit &&

@@ -1,0 +1,62 @@
+bouldering_wall "wall6" { 
+    volumes [
+        rectangle {
+            pos { x: 0, y: 0 },
+            depth: 35,
+            width: 180,
+            height: 100,
+            holds [
+                hold "5001" {
+                    pos { x: 40, y: 20 },
+                    shape: "22",
+                    colours [ green ],
+                    start_hold: 1
+                },
+                hold "5002" {
+                    pos { x: 80, y: 40 },
+                    shape: "25",
+                    colours [ green ]
+                }
+            ]
+        },
+        circle {
+            pos { x: 90, y: 45 },
+            radius: 30,
+            depth: -15, 
+            holds [
+                hold "5003" {
+                    pos { x: 100, y: 60 },
+                    shape: "26",
+                    colours [ green, white ]
+                }
+            ]
+        },
+        polygon {
+            pos { x: 0, y: 100 },
+            faces [
+                face {
+                    vertices [
+                        { x: 0, y: 0, z: 0 },
+                        { x: 2, y: 1, z: 10 },
+                        { x: 0, y: 2, z: 5 }
+                    ],
+                    holds [
+                        hold "5004" {
+                            pos { x: 110, y: 140 },
+                            shape: "27",
+                            colours [ green ],
+                            end_hold
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    routes [
+        bouldering_route "Green Snake" {
+            grade: "6A",
+            grid_base_point { x: 0, y: 0 },
+            holds ["5001", "5002", "5003", "5004"]
+        }
+    ]
+}
