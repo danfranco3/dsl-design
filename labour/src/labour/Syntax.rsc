@@ -10,7 +10,24 @@ module labour::Syntax
  * plugin works accordingly.
  */
 
+
+/*
+ * This file defines the **concrete syntax** for the LaBouR DSL. It uses *syntax declarations*
+ * and *lexical rules* with regular expressions to precisely specify the structure of valid
+ * LaBouR programs. The language models bouldering walls, including their volumes, routes,
+ * holds, and properties.
+ *
+ * The syntax includes a variety of shape types, each with configurable properties. It also
+ * supports nested constructs for describing complex features like faces, positions, and
+ * route specifications.
+ *
+ * This grammar serves as the foundation for parsing and interpreting LaBouR programs.
+ * Multiple example programs are implemented to test and validate this syntax definition.
+ */
+
 layout Whitespace = [:\t-\n\r\ ]*;     
+
+lexical Comment = ^"#" ![\n]* $;
 
 start syntax BoulderingWall
     = boulder: "bouldering_wall" Label name "{" "volumes" "[" {Volume ","}+ "]" "," "routes" "[" {Route ","}+ "]" "}";
