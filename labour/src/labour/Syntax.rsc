@@ -12,7 +12,7 @@ module labour::Syntax
 
 
 /*
- * This file defines the **concrete syntax** for the LaBouR DSL. It uses *syntax declarations*
+ * Definition of the **concrete syntax** for the LaBouR DSL. It uses *syntax declarations*
  * and *lexical rules* with regular expressions to precisely specify the structure of valid
  * LaBouR programs. The language models bouldering walls, including their volumes, routes,
  * holds, and properties.
