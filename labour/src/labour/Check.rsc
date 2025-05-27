@@ -271,6 +271,9 @@ bool checkCompleteHold(BoulderingWallAST wall) {
           }
           case shape(_): shape_flag = true;
           case colours(_): colour_flag = true;
+          case start_hold(_) : continue;
+          case end_hold() : continue;
+          case rotation(_) : continue;
           default : throw "Property <prop> is not defined for Hold";
         }
       }
@@ -341,6 +344,7 @@ bool checkCorrectCircle(BoulderingWallAST wall) {
               case y(_): y_flag = true;
             }
           }
+          case holds(_) : continue;
           default : throw "Property <prop> is not defined for volume Circle";
         }
       }
@@ -381,6 +385,7 @@ bool checkCorrectRectangle(BoulderingWallAST wall) {
               case y(_): y_flag = true;
             }
           }
+          case holds(_) : continue;
           default : throw "Property <prop> is not defined for volume Rectangle";
         }
       }
@@ -423,6 +428,7 @@ bool checkCorrectPolygon(BoulderingWallAST wall){
               all_valid = false;
             }
           }
+          case holds(_) : continue;
         }
       }
       if (!hasFaces) {

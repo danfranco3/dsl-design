@@ -49,19 +49,19 @@ VolumeAST loadVolume(Volume v) {
 
 PropsAST loadProp(Props p){
 	switch (p) {
-		case (Props) `height: <Int h1>` : {
+		case (Props) `height <Int h1>` : {
 			return height(toInt("<h1>"));
 		}
-		case (Props) `depth: <Int d1>` : {
+		case (Props) `depth <Int d1>` : {
 			return depth(toInt("<d1>"));
 		}
-		case (Props) `width: <Int w1>` : {
+		case (Props) `width <Int w1>` : {
 			return width(toInt("<w1>"));
 		}
-		case (Props) `radius: <Int r1>` : {
+		case (Props) `radius <Int r1>` : {
 			return radius(toInt("<r1>"));
 		}
-		case (Props) `rotation: <Int r2>` : {
+		case (Props) `rotation <Int r2>` : {
 			return rotation(toInt("<r2>"));
 		}
 		case (Props) `pos { <Coord c1>, <Coord c2> }` : {
@@ -70,10 +70,10 @@ PropsAST loadProp(Props p){
 		case (Props) `holds [ <{Hold ","}+ hs> ]` : {
 			return holds([loadHold(h) | h <- hs]);
 		}
-		case (Props) `start_hold: <StartHoldValue s>` : {
+		case (Props) `start_hold <StartHoldValue s>` : {
 			return start_hold(toInt("<s>"));
 		}
-		case (Props) `shape: <ShapeProp sp>` : {
+		case (Props) `shape <ShapeProp sp>` : {
 			return shape(unquoteString("<sp>"));
 		} 
 		case (Props) `colours [ <{Colour ","}+ cs> ]` : {
@@ -128,13 +128,13 @@ HoldAST loadHold(Hold h){
 
 CoordinateAST loadCoordinate(Coord c) {
 	switch (c) {
-		case (Coord) `x: <Int i>` : {
+		case (Coord) `x <Int i>` : {
 			return x(toInt("<i>"));
 		}
-		case (Coord) `y: <Int i>` : {
+		case (Coord) `y <Int i>` : {
 			return y(toInt("<i>"));
 		}
-		case (Coord) `z: <Int i>` : {
+		case (Coord) `z <Int i>` : {
 			return z(toInt("<i>"));
 		}
 		default: throw "Unknown coordinate type";
@@ -152,7 +152,7 @@ RouteAST loadRoute(Route r) {
 
 RoutePropsAST loadRouteProp(RouteProps rp) {
 	switch (rp) {
-		case (RouteProps) `grade: <String g>` : {
+		case (RouteProps) `grade <String g>` : {
 			return grade(unquoteString("<g>"));
 		}
 		case (RouteProps) `grid_base_point { <Coord c1> , <Coord c2> }` : {
