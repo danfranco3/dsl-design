@@ -25,7 +25,7 @@ module labour::Syntax
  * Multiple example programs are implemented to test and validate this syntax definition.
  */
 
-layout Whitespace = [:\t-\n\r\ ]*;     
+layout Whitespace = [\t-\n\r\ ]*;     
 
 lexical Comment = ^"#" ![\n]* $;
 
@@ -50,24 +50,24 @@ syntax Polygon
     = pol: "{" {Props ","}+ "}";
 
 syntax Coord
-    = coord: "x" Int
-    | "y" Int
-    | "z" Int;
+    = coord: "x:" Int
+    | "y:" Int
+    | "z:" Int;
 
 
 lexical ShapeProp = "\"" Int "\"";
 
 syntax Props
-    = prop: "depth" Int
-    | "radius" Int
-    | "width" Int
-    | "height" Int
+    = prop: "depth:" Int
+    | "radius:" Int
+    | "width:" Int
+    | "height:" Int
     | "faces" "[" {Face ","}+ "]"
     | "pos" "{" Coord "," Coord "}"
     | "holds" "[" {Hold ","}+ "]"
-    | "start_hold" StartHoldValue
-    | "shape" ShapeProp
-    | "rotation" Int
+    | "start_hold:" StartHoldValue
+    | "shape:" ShapeProp
+    | "rotation:" Int
     | "colours" "[" {Colour ","}+ "]"
     | "end_hold";
 
@@ -94,7 +94,7 @@ syntax Route
  = route: "bouldering_route" String id "{" {RouteProps ","}+ "}";
 
 syntax RouteProps
-    = "grade" String g
+    = "grade:" String g
     | "grid_base_point" "{" Coord "," Coord "}"
     | "holds" "[" {HoldID ","}+ "]";
 

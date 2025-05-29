@@ -1,0 +1,21 @@
+bouldering_wall "wall8" {
+    volumes [
+        rectangle {
+            pos { x: 0, y: 0 },
+            depth: 40,
+            width: 40,
+            height: 40,
+            holds [
+                hold "0001" { pos { x: 10, y: 10 }, shape: "50", colours [ red ], start_hold: 1 },
+                hold "0002" { pos { x: 20, y: 20 }, shape: "50", colours [ blue ], end_hold }
+            ]
+        }
+    ],
+    routes [
+        bouldering_route "route8" {
+            grade: "3C",
+            grid_base_point { x: 0, y: 0 },
+            holds ["0001", "0002"]
+        }
+    ]
+}

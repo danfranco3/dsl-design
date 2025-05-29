@@ -1,0 +1,19 @@
+bouldering_wall "wall4" {
+    volumes [
+        circle {
+            pos { x: 0, y: 0 },
+            radius: 40,
+            depth: 20,
+            holds [
+                hold "0001" { pos { x: 10, y: 10 }, shape: "25", colours [ green ], start_hold: 1 },
+                hold "0002" { pos { x: 20, y: 20 }, shape: "25", colours [ green ], end_hold }
+            ]
+        }
+    ],
+    routes [
+        bouldering_route "route4" {
+            grid_base_point { x: 0, y: 0 },
+            holds ["0001", "0002"]
+        }
+    ]
+}

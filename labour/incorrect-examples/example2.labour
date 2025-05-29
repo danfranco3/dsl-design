@@ -9,25 +9,32 @@ bouldering_wall "wall8" {
                 hold "7001" {
                     pos { x: 10, y: 20 },
                     shape: "50",
-                    colours [ blue ],
+                    colours [ red, blue ],
                     start_hold: 1
                 },
                 hold "7002" {
                     pos { x: 30, y: 40 },
                     shape: "50",
-                    colours [ red ]
+                    colours [ red ],
+                    start_hold: 2
                 },
                 hold "7003" {
                     pos { x: 60, y: 80 },
                     shape: "50",
-                    colours [ black ],
+                    colours [ red, black ],
                     end_hold
+                },
+                hold "7004" {
+                    pos { x: 30, y: 40 },
+                    shape: "50",
+                    colours [ red ],
+                    start_hold: 2
                 }
             ]
         }
     ],
     routes [
-        bouldering_route "Blue Confusion" {
+        bouldering_route "B" {
             grade: "5A",
             grid_base_point { x: 0, y: 0 },
             holds ["7001", "7002", "7003"]

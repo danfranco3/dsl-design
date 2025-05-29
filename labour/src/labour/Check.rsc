@@ -30,9 +30,6 @@ bool checkBoulderWallConfiguration(BoulderingWallAST wall) {
   bool startingLabelLimit = checkHandStartHoldsRoute(wall);
   if (!startingLabelLimit) println("Each route must have between 0 and 2 hand start holds.");
 
-  bool unique_end_hold = checkUniqueEndHold(wall);
-  if (!unique_end_hold) println("Each route can have at most one end hold.");
-
   bool oneVolumeOneRoute = checkOneVolumeOneRoute(wall);
   if (!oneVolumeOneRoute) println("Every wall must have at least one volume and one route.");
 
@@ -46,7 +43,7 @@ bool checkBoulderWallConfiguration(BoulderingWallAST wall) {
   if (!xyComponent) println("The grid base point must include both x and y components.");
 
   bool endHoldsRoute = checkEndHoldsRoute(wall);
-  if (!endHoldsRoute) println("Routes must not have more than one end hold or incorrectly defined end hold.");
+  if (!endHoldsRoute) println("Routes must not have more than one end hold.");
 
   bool sameColour = checkSameColour(wall);
   if (!sameColour) println("All holds in a route must have the same colour, or one matching the route colour if multi-coloured.");
@@ -68,7 +65,6 @@ bool checkBoulderWallConfiguration(BoulderingWallAST wall) {
 
   return numberOfHolds &&
          startingLabelLimit &&
-         unique_end_hold &&
          oneVolumeOneRoute &&
          holdsRoute &&
          gradeGridIdentifier &&
@@ -85,33 +81,25 @@ bool checkBoulderWallConfiguration(BoulderingWallAST wall) {
 
 
 
-// Check that there are at least two holds in the wall
+// Check that there are at least two holds in each route
 bool checkNumberOfHolds(BoulderingWallAST wall) {
-  num_holds = 0;
   visit(wall) {
         // Count number of holds
-        case hold(_, _): num_holds = num_holds + 1;
-    };
-  // Return true if there are at least 2 holds in the wall.
-  return (num_holds >= 2);
-}
-
-// This function will insure that there is only one hold assign to end hold
-// This function will ensure that there is only one hold assigned as end_hold
-bool checkUniqueEndHold(BoulderingWallAST wall){
-  int endHoldCount = 0;
-  visit(wall) {
-    case hold(_, list[PropsAST] props): {
-      for (prop <- props) {
-        switch(prop){
-          case end_hold(): endHoldCount = endHoldCount + 1;
+        case route(_, props): {
+          for (prop <- props){
+            holdCount = 0;
+            switch (prop) {
+              case holds(holdList) : {
+                if (size(holdList) < 2){
+                  return false;
+                }
+              }
+            }
+          }
         }
-      }
-    }
-  }
-  return endHoldCount == 1;
+    };
+  return true;
 }
-
 
 // Every wall must have at least one volume and one route
 bool checkOneVolumeOneRoute(BoulderingWallAST wall){
@@ -209,6 +197,7 @@ bool checkIDs(BoulderingWallAST wall){
   // Checked by syntax regex
   return true;
 }
+
 // The holds in a bouldering route must all have the same colour, but some holds may be
 // multi-coloured (think of a plexiglas hold with some coloured pieces visible inside), in which
 // case one of these colours has to match the route’s colour. The order of the colours in a
